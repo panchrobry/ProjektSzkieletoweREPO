@@ -1,0 +1,52 @@
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="/account/home">EASTROBO</a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/account/login">LOGIN</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/account/register">REGISTER</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/account/contact">CONTACT</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% block head %}
+    <meta charset="utf-8">
+    <title></title>
+    {% endblock %}
+  </head>
+  <body>
+
+    {% block body %}
+
+    {% endblock %}
+    <!-- Footer -->
+    <footer class="page-footer font-small blue">
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">© 2019 Copyright: Memformatyka
+
+      </div>
+      <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+  </body>
+</html>

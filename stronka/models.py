@@ -2,6 +2,8 @@ from django.db import models
 from datetime import datetime
 from django_countries.fields import CountryField
 from django.core.validators import MaxValueValidator
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -13,8 +15,7 @@ class Team(models.Model):
     Country = CountryField(blank_label='Select Country',multiple=True,default = 'Poland')
 
 class User(models.Model):
-
-    Username = models.CharField(max_length = 30)
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
     Forename = models.CharField(max_length = 50)
     Surname = models.CharField(max_length = 50)
     TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,blank = True, null=True)
@@ -27,6 +28,11 @@ class User(models.Model):
         ('XXL','XXL'),
     )
     Size = models.CharField(choices = TShirtSize, max_length = 4, default = 'M')
+
+    def create_profile(sender,**kwargs):
+        if kwargs['created']:
+            user_profile = User.objects.create(user =kwargs['instance'])
+    post_save.connect(create_profile,sender = User)
 class Category(models.Model):
     Description = models.CharField(max_length = 255)
     MinAge = models.IntegerField(null = True)

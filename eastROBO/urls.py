@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url,include
 from django.urls import path
+from eastROBO import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^account/',include('stronka.urls'))
+    url(r'^account/',include('stronka.urls')),
+    url(r'^$',views.login_redirect, name = 'login_redirect'),
 ]

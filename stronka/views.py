@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
 
-    return render(request, 'accounts/home.html')
+    return render(request, 'accounts/home.html',args)
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)

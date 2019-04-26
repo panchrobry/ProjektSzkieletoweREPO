@@ -1,17 +1,20 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, redirect
 from .models import User
+from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 
-def loginSite(request):
-    dane = ['Michał','to','cwel']
-    name = 'Karol Nadolny'
-
-    args = {'name': name, 'dane': dane}
-    return render(request, 'accounts/login.html',args)
-
 def home(request):
-    dane = ['Michał','to','cwel']
-    name = 'Karol Nadolny'
+    return render(request, 'accounts/home.html')
 
-    args = {'name': name, 'dane': dane}
-    return render(request, 'accounts/home.html',args)
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/account/home')
+    else:
+        form = UserCreationForm()
+
+        args = {'form':form}
+        return render(request,'accounts/reg_form.html',args)

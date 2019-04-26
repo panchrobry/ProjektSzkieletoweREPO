@@ -3,14 +3,17 @@
 
 {% block body %}
 <div class="jumbotron">
-      <h1> Logowanie </h1>
+      <h1> Log in </h1>
 </div>
 
 <div class="container">
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" name="submit"> Zaloguj </button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="submit" name="submit">
+    Log in
+    </button>
+    <a href='/account/register/' class="btn btn-primary ">Register</a>
 </form>
 </div>
 

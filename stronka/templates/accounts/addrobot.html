@@ -3,19 +3,17 @@
 
 {% block body %}
 <div class="jumbotron">
-      <h1> Contact </h1>
+      <h1> Add Robot </h1>
 </div>
 
 <div class="container">
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <div class="g-recaptcha" data-sitekey="6LegqqAUAAAAALUjFjncZ-_qpqKo_iLm3BZAvgEu"></div>
     <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="submit" name="submit">
-    Send
+    Add
     </button>
-
+    
 </form>
 </div>
 

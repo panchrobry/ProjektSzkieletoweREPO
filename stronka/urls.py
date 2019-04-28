@@ -9,5 +9,7 @@ urlpatterns = [
     url(r'^logout/$',logout, {'template_name': 'accounts/logout.html' }),
     url(r'^register/$',views.register, name = 'register'),
     url(r'^contact/$',views.contact, name = 'contact'),
+    url(r'^addrobot/$',views.addRobot, name = 'addRobot'),
+    url(r'^addteam/$',views.addTeam, name = 'addTeam'),
 
 ]

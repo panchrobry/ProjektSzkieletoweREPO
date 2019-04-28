@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '&@j-=!+%gy^+x)hppx98jy6#3llepsfs=jrjxi8db#o=t^5*^5'
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LegqqAUAAAAALUjFjncZ-_qpqKo_iLm3BZAvgEu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

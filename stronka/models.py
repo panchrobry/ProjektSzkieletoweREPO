@@ -40,7 +40,7 @@ class Category(models.Model):
 
 class Robot(models.Model):
     Name = models.CharField(max_length = 50)
-    TeamID = models.ForeignKey(Team,on_delete=models.CASCADE)
+    TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,null = True)
     CategoryID = models.ForeignKey(Category,on_delete=models.CASCADE)
     Passed = models.BooleanField(default = False)
 

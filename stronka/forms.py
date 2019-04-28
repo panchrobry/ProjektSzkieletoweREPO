@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-
-
+from django_countries.fields import CountryField
+from .models import Robot
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -33,4 +33,16 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length = 100)
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
-    
+
+class RobotCreationForm(forms.Form):
+    categories = (
+    (1,'cos'),
+    (2,'innecos'),
+    )
+    name = forms.CharField(max_length = 100)
+    category = forms.ChoiceField(choices = categories, label = 'category')
+class addTeamForm(forms.Form):
+    name = forms.CharField(max_length = 100)
+    city = forms.CharField(max_length = 100)
+    company = forms.CharField(max_length = 100)
+    country = CountryField(blank_label='(Select Country)',multiple=True,default = 'Poland').formfield()

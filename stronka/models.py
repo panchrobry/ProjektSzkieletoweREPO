@@ -4,15 +4,24 @@ from django_countries.fields import CountryField
 from django.core.validators import MaxValueValidator
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 
 # Create your models here.
 
 class Team(models.Model):
+    def unique_rand():
+        while True:
+            code = get_random_string(length = 6)
+            if not Team.objects.filter(TeamCode=code).exists():
+                return code
+
     Name = models.CharField(max_length = 30)
     Register_Date = models.DateField(default = datetime.now(),blank = False)
     City = models.CharField(max_length = 50)
     Company = models.CharField(max_length = 100)
     Country = CountryField(blank_label='Select Country',multiple=True,default = 'Poland')
+    TeamCode = models.CharField(max_length = 6, unique = True, default = unique_rand)
+
 
 class User(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
@@ -29,10 +38,6 @@ class User(models.Model):
     )
     Size = models.CharField(choices = TShirtSize, max_length = 4, default = 'M')
 
-    def create_profile(sender,**kwargs):
-        if kwargs['created']:
-            user_profile = User.objects.create(user =kwargs['instance'])
-    post_save.connect(create_profile,sender = User)
 class Category(models.Model):
     Description = models.CharField(max_length = 255)
     MinAge = models.IntegerField(null = True)

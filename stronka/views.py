@@ -1,12 +1,25 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import User,Robot,Category,Team
 from django.contrib.auth.forms import UserCreationForm
-from .forms import ContactForm,RobotCreationForm,addTeamForm
+from .forms import ContactForm,RobotCreationForm,addTeamForm,SignUpForm
 from django.core.mail import send_mail
 from datetime import datetime
+from django.contrib.auth import login, authenticate
+
 # Create your views here.
-
-
+def registerUserOwn(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+        return render(request, 'accounts/signup.html', {'form': form})
 
 def home(request):
 
@@ -18,7 +31,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('account/home/')
+            return redirect('/account/home/')
     else:
         form = UserCreationForm()
         args = {'form':form}

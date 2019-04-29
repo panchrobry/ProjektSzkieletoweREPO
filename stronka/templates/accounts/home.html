@@ -9,7 +9,14 @@
   <div class="jumbotron">
         <h1> Strona startowa </h1>
   </div>
+
   <div class="container">
+      {% if user.is_authenticated %}
+      Witaj {{ user.username }}!<br/>
+
+      {% else %}
+      Witaj nieznajomy!<br/>
+      {% endif %}
       Tym zajmuje sie <kbd>Hubert</kbd>
       cos<br/>
       cos<br/>
@@ -19,4 +26,5 @@
       cos<br/>
       cos<br/>
   </div>
+
 {% endblock %}

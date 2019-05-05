@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
+    atomic = False
     dependencies = [
         ('stronka', '0001_initial'),
     ]

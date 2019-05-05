@@ -21,12 +21,21 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'logout' %}">LOGOUT</a>
       </li>
+        {% if user.profile.TeamID == Null %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'addTeam' %}">Create Team</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'addRobot' %}">Add robot</a>
+        </li>
+        {% endif %}
       {% else %}
       <li class="nav-item">
         <a class="nav-link" href="/account/login">LOGIN</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/account/register">REGISTER</a>
+        <a class="nav-link" href="/account/registerOwn">REGISTER</a>
       </li>
       {% endif %}
     </ul>

@@ -1,25 +1,30 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import User,Robot,Category,Team
+from .models import Robot,Category,Team
 from django.contrib.auth.forms import UserCreationForm
 from .forms import ContactForm,RobotCreationForm,addTeamForm,SignUpForm
 from django.core.mail import send_mail
 from datetime import datetime
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,get_user_model
 
 # Create your views here.
 def registerUserOwn(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.profile.Forename = form.cleaned_data.get('forename')
+            user.profile.Surname = form.cleaned_data.get('surname')
+            user.profile.Email = form.cleaned_data.get('email')
+            user.profile.Size = form.cleaned_data.get('size')
+            user.save()
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('home')
+            user = authenticate(username=user.username, password=raw_password)
+            #login(request, user)
+            return redirect('/account/home/')
     else:
         form = SignUpForm()
-        return render(request, 'accounts/signup.html', {'form': form})
+    return render(request, 'accounts/signup.html', {'form': form})
 
 def home(request):
 
@@ -43,7 +48,7 @@ def addRobot(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             try:
-                category = Category.objects.get(Description = 'cos' )
+                category = form.cleaned_data['category']
 
             except Category.DoesNotExist:
                 category = None
@@ -62,6 +67,7 @@ def addTeam(request):
     if request.method == 'POST':
         form = addTeamForm(request.POST)
         if form.is_valid():
+            loginUser = request.user
             name = form.cleaned_data['name']
             regDate = datetime.now()
             city = form.cleaned_data['city']
@@ -74,6 +80,8 @@ def addTeam(request):
                 Company = company,
                 Country = country,
             )
+            loginUser.profile.TeamID = Team.objects.get(Name = name)
+            loginUser.save()
             return redirect('/account/home/')
     else:
         form = addTeamForm()

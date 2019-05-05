@@ -10,7 +10,7 @@ import stronka.models
 
 
 class Migration(migrations.Migration):
-
+    atomic = False
     initial = True
 
     dependencies = [

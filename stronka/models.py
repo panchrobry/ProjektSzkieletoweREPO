@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -23,8 +24,8 @@ class Team(models.Model):
     TeamCode = models.CharField(max_length = 6, unique = True, default = unique_rand)
 
 
-class User(models.Model):
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
+class UserOwn(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE, related_name = 'user')
     Forename = models.CharField(max_length = 50)
     Surname = models.CharField(max_length = 50)
     TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,blank = True, null=True)
@@ -61,3 +62,23 @@ class Match(models.Model):
     IDRobot2 = models.ForeignKey(Robot,on_delete = models.CASCADE, related_name='robot2')
     IDJudge = models.ForeignKey(Judge,on_delete = models.CASCADE, blank = True, null = True)
     Result = models.CharField(max_length = 50)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name = 'profile')
+    Forename = models.CharField(max_length = 50)
+    Surname = models.CharField(max_length = 50)
+    TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,blank = True, null=True)
+    Email = models.EmailField(max_length = 50)
+    TShirtSize = (
+        ('S','S'),
+        ('M','M'),
+        ('L','L'),
+        ('XL','XL'),
+        ('XXL','XXL'),
+    )
+    Size = models.CharField(choices = TShirtSize, max_length = 4, default = 'M')
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()

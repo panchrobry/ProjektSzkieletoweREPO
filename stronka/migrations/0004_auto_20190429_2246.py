@@ -6,6 +6,7 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ('stronka', '0003_auto_20190428_2155'),

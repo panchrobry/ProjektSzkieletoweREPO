@@ -2,16 +2,33 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django_countries.fields import CountryField
-from .models import Robot
+from .models import Robot,Category
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
-    last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
-
+    #birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
+    email = forms.EmailField(required=True)
+    forename = forms.CharField(max_length = 100)
+    surname = forms.CharField(max_length = 100)
+    TShirtSize = (
+        ('S','S'),
+        ('M','M'),
+        ('L','L'),
+        ('XL','XL'),
+        ('XXL','XXL'),
+    )
+    size = forms.ChoiceField(choices = TShirtSize)
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = (
+                    'username',
+                    'email',
+                    'forename',
+                    'surname',
+                    'size',
+                    'password1',
+                    'password2',
+
+                    )
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -49,7 +66,7 @@ class RobotCreationForm(forms.Form):
     (2,'innecos'),
     )
     name = forms.CharField(max_length = 100)
-    category = forms.ChoiceField(choices = categories, label = 'category')
+    category = forms.ModelChoiceField(queryset = Category.objects.all())
 class addTeamForm(forms.Form):
     name = forms.CharField(max_length = 100)
     city = forms.CharField(max_length = 100)

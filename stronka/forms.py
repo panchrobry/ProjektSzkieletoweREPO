@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django_countries.fields import CountryField
 from .models import Robot,Category
 
+class JoinForm(forms.Form):
+    teamID = forms.CharField(max_length = 8)
+
 class SignUpForm(UserCreationForm):
     #birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
     email = forms.EmailField(required=True)

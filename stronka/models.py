@@ -24,20 +24,6 @@ class Team(models.Model):
     TeamCode = models.CharField(max_length = 6, unique = True, default = unique_rand)
 
 
-class UserOwn(models.Model):
-    user = models.OneToOneField(User, on_delete = models.CASCADE, related_name = 'user')
-    Forename = models.CharField(max_length = 50)
-    Surname = models.CharField(max_length = 50)
-    TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,blank = True, null=True)
-    Email = models.EmailField(max_length = 50)
-    TShirtSize = (
-        ('S','S'),
-        ('M','M'),
-        ('L','L'),
-        ('XL','XL'),
-        ('XXL','XXL'),
-    )
-    Size = models.CharField(choices = TShirtSize, max_length = 4, default = 'M')
 
 class Category(models.Model):
     Description = models.CharField(max_length = 255)
@@ -76,6 +62,7 @@ class Profile(models.Model):
         ('XXL','XXL'),
     )
     Size = models.CharField(choices = TShirtSize, max_length = 4, default = 'M')
+    IsJudge = models.BooleanField(default = False)
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

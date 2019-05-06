@@ -1,12 +1,26 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import Robot,Category,Team
 from django.contrib.auth.forms import UserCreationForm
-from .forms import ContactForm,RobotCreationForm,addTeamForm,SignUpForm
+from .forms import ContactForm,RobotCreationForm,addTeamForm,SignUpForm,JoinForm
 from django.core.mail import send_mail
 from datetime import datetime
 from django.contrib.auth import login, authenticate,get_user_model
 
 # Create your views here.
+def joinTeam(request):
+    if request.method == 'POST':
+        form = JoinForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.profile.TeamID = Team.objects.get(TeamCode = form.cleaned_data.get('teamID'))
+            user.save()
+            return redirect('/account/home/')
+
+    else:
+        form = JoinForm()
+        return render(request, 'accounts/jointeam.html', {'form': form})
+
+
 def registerUserOwn(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -46,6 +60,7 @@ def addRobot(request):
     if request.method == 'POST':
         form = RobotCreationForm(request.POST)
         if form.is_valid():
+            user = request.user
             name = form.cleaned_data['name']
             try:
                 category = form.cleaned_data['category']
@@ -56,6 +71,7 @@ def addRobot(request):
             robot = Robot.objects.create(
                 Name = name,
                 CategoryID = category,
+                TeamID = user.profile.TeamID
             )
             return redirect('/account/home/')
     else:

@@ -21,13 +21,22 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'logout' %}">LOGOUT</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'change' %}">DETAILS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'changePassword' %}">Change Password</a>
+      </li>
         {% if user.profile.TeamID == Null %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'addTeam' %}">Create Team</a>
+          <a class="nav-link" href="{% url 'addTeam' %}">CREATE TEAM</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'joinTeam' %}">JOIN TEAM</a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'addRobot' %}">Add robot</a>
+          <a class="nav-link" href="{% url 'addRobot' %}">ADD ROBOT</a>
         </li>
         {% endif %}
       {% else %}

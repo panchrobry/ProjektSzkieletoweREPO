@@ -1,10 +1,24 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import Robot,Category,Team
-from django.contrib.auth.forms import UserCreationForm
-from .forms import ContactForm,RobotCreationForm,addTeamForm,SignUpForm,JoinForm
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from .forms import (ContactForm,
+                    RobotCreationForm,
+                    addTeamForm,
+                    SignUpForm,
+                    JoinForm,
+                    ChangeForm,
+
+                    )
 from django.core.mail import send_mail
 from datetime import datetime
-from django.contrib.auth import login, authenticate,get_user_model
+from django.contrib.auth import (
+                                login,
+                                authenticate,
+                                get_user_model,
+                                update_session_auth_hash,
+
+                                )
 
 # Create your views here.
 def joinTeam(request):
@@ -20,6 +34,20 @@ def joinTeam(request):
         form = JoinForm()
         return render(request, 'accounts/jointeam.html', {'form': form})
 
+def changePassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user,request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request,user)
+            messages.success(request,"Zmieniono hasło")
+            return redirect('/account/home/')
+        else:
+            messages.error(request,"Popraw błąd")
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/changePassword.html',{'form': form})
+
 
 def registerUserOwn(request):
     if request.method == 'POST':
@@ -34,7 +62,7 @@ def registerUserOwn(request):
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
-            #login(request, user)
+            login(request, user)
             return redirect('/account/home/')
     else:
         form = SignUpForm()
@@ -43,6 +71,34 @@ def registerUserOwn(request):
 def home(request):
 
     return render(request, 'accounts/home.html')
+
+
+
+def change(request):
+    if request.method == 'POST':
+        form = ChangeForm(request.POST, instance = request.user)
+        if form.is_valid():
+            form.save()
+            user = request.user
+            forename = form.cleaned_data['forename']
+            surname = form.cleaned_data['surname']
+            if forename :
+
+                user.profile.Forename = forename
+            if surname:
+
+                user.profile.Surname = surname
+
+            user.save()
+            return redirect('/account/home/')
+    else:
+        form = ChangeForm()
+        args = {'form':form}
+        return render(request,'accounts/change.html',args)
+
+
+
+
 
 
 def register(request):

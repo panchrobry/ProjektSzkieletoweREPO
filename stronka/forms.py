@@ -7,6 +7,18 @@ from .models import Robot,Category
 class JoinForm(forms.Form):
     teamID = forms.CharField(max_length = 8)
 
+class ChangeForm(UserChangeForm):
+    forename = forms.CharField(max_length = 100,required = False)
+    surname = forms.CharField(max_length = 100,required = False)
+
+    class Meta:
+        model = User
+        fields = (
+                'forename',
+                'surname',
+                'password',
+                )
+
 class SignUpForm(UserCreationForm):
     #birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
     email = forms.EmailField(required=True)
@@ -64,10 +76,6 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
 
 class RobotCreationForm(forms.Form):
-    categories = (
-    (1,'cos'),
-    (2,'innecos'),
-    )
     name = forms.CharField(max_length = 100)
     category = forms.ModelChoiceField(queryset = Category.objects.all())
 class addTeamForm(forms.Form):

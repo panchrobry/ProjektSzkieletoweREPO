@@ -15,4 +15,6 @@ urlpatterns = [
     url(r'^addteam/$',views.addTeam, name = 'addTeam'),
     url(r'^jointeam/$',views.joinTeam, name = 'joinTeam'),
     url(r'^registerOwn/$',views.registerUserOwn, name = 'registerUserOwn'),
+    url(r'^change/$',views.change, name = 'change'),
+    url(r'^changePassword/$',views.changePassword, name = 'changePassword'),
 ]

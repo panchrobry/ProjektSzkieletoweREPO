@@ -1,17 +1,35 @@
 {% extends 'base.html' %}
+{%block head%}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/contact_style.css' %}" type = "text/css">
+
+{%endblock%}
+{%block body%}
 
 
-{% block body %}
-<div class="jumbotron">
-      <h1> Contact </h1>
-</div>
 
-<div class="container">
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <div class="g-recaptcha" data-sitekey="6LegqqAUAAAAALUjFjncZ-_qpqKo_iLm3BZAvgEu"></div>
+<div class="contact_form">
+  <h1>CONTACT FORM</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <p>
+          <div class="form">
+          {{ field }}
+          </div>
+
+          {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </p>
+      {% endfor %}
+      <script src='https://www.google.com/recaptcha/api.js'></script>
+      <div class="g-recaptcha" data-sitekey="6LegqqAUAAAAALUjFjncZ-_qpqKo_iLm3BZAvgEu"></div>
+
     <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="submit" name="submit">
     Send
     </button>
@@ -19,4 +37,5 @@
 </form>
 </div>
 
-{% endblock %}
+{%endblock%}
+</html>

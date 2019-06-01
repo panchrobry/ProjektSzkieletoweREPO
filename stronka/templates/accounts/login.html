@@ -1,19 +1,38 @@
 {% extends 'base.html' %}
+{%block head%}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/login_style.css' %}" type = "text/css">
 
+{%endblock%}
 
 {% block body %}
-<div class="jumbotron">
-      <h1> Log in </h1>
-</div>
 
-<div class="container">
+
+
+
+<div class="login_form">
+  <h1> Log in </h1>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+      <p>
+        <div class="form">
+        {{ field.label_tag }}<br>
+        {{ field }}
+        </div>
+
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
     <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="submit" name="submit">
-    Log in
+      LOGIN
     </button>
-    <a href='/account/registerOwn/' class="btn btn-primary ">Register</a>
+
 </form>
 </div>
 

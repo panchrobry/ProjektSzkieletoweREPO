@@ -71,9 +71,22 @@ class RegistrationForm(UserCreationForm):
         return user
 
 class ContactForm(forms.Form):
-    name = forms.CharField(max_length = 100)
-    email = forms.EmailField()
-    message = forms.CharField(widget=forms.Textarea)
+    name = forms.CharField(max_length = 100,widget = forms.TextInput(
+            attrs={
+                'placeholder': 'Enter your name'
+            }
+    ))
+    email= forms.CharField(max_length=100,
+                           widget= forms.EmailInput(
+                            attrs={
+                            'placeholder':'Enter your email'
+                            }
+                        ))
+    message = forms.CharField(widget=forms.Textarea(
+                        attrs={
+                        'placeholder':'Enter your message'
+                        }
+    ))
 
 class RobotCreationForm(forms.Form):
     name = forms.CharField(max_length = 100)

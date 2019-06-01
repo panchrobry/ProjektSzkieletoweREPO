@@ -19,8 +19,11 @@ from django.contrib.auth import (
                                 update_session_auth_hash,
 
                                 )
-
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 # Create your views here.
+kluczyk ='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'
 def joinTeam(request):
     if request.method == 'POST':
         form = JoinForm(request.POST)
@@ -166,14 +169,22 @@ def contact(request):
         if form.is_valid():
             sender_name = form.cleaned_data['name']
             sender_email = form.cleaned_data['email']
-            message = "{0} wyslal wiadomosc: \n \n {1}".format(
-                sender_name,form.cleaned_data['message']
-            )
+            messageForm = form.cleaned_data['message']
+            message = Mail(
+                        from_email=sender_email,
+                        to_emails='karolek9.10@o2.pl',
+                        subject='Sending with Twilio SendGrid is Fun',
+                        html_content='<strong>even with Python</strong>'
+                        )
             try:
-                send_mail('test',message,sender_email,['karolek9.10@o2.pl'],fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Nie Poszlo')
-            return HttpResponse('Poszlo')
+                sg = SendGridAPIClient(kluczyk)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+                #   return HttpResponse('POSZLO')
+            except Exception as e:
+                print(e)
     else:
         form = ContactForm()
     return render(request,'accounts/contact.html', {'form':form})

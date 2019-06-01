@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stronka',
     'django_countries',
+    'sendgrid',
 ]
 
 MIDDLEWARE = [
@@ -121,7 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_FILE_PATH = '/tmp/wiadomosci'
-LOGIN_REDIRECT_URL = '/account/home'
-LOGOUT_REDIRECT_URL = '/account/home'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')

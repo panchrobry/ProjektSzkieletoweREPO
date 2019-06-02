@@ -8,7 +8,7 @@ from .forms import (ContactForm,
                     SignUpForm,
                     JoinForm,
                     ChangeForm,
-
+                    LoginForm,
                     )
 from django.core.mail import send_mail
 from datetime import datetime
@@ -24,6 +24,19 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 # Create your views here.
 kluczyk ='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'
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.login(request)
+            if user:
+                login(request, user)
+
+        return render(request, 'accounts/login.html', {'form': form })      
+    else:
+        form = LoginForm()
+        return render(request, 'accounts/login.html', {'form': form })
+
 def joinTeam(request):
     if request.method == 'POST':
         form = JoinForm(request.POST)

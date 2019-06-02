@@ -5,7 +5,7 @@ from django.contrib.auth.views import login,logout
 
 
 urlpatterns = [
-    url(r'^login/$',login, {'template_name': 'accounts/login.html' }),
+    url(r'^login/$',views.login_view, name = 'login_view'),
     url(r'^home/$',views.home),
     path('accounts/', include('django.contrib.auth.urls')),
     #url(r'^logout/$',logout, {'template_name': 'accounts/logout.html' }),

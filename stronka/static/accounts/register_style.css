@@ -4,15 +4,14 @@ body{
   padding: 0;
   font-family: sans-serif;
 
-  background: url(tlo.jpg) no-repeat;
-  background-size: cover;
+  background-color: #2980b9
 }
-.login_form{
+.register_form{
 
-  width: 520px;
+  width: 800px;
   padding: 40px;
   position: absolute;
-  top: 50%;
+  top: 120%;
   left: 50%;
   transform: translate(-50%,-50%);
   color: white;
@@ -20,7 +19,7 @@ body{
   background-color: rgba(0,0,0,.5);
   text-align: center;
 }
-.login_form input[type ="text"]{
+.register_form input[type ="text"]{
   border: 0;
   background: none;
   display: block;
@@ -28,13 +27,13 @@ body{
   text-align: center;
   border: 2px solid #2980b9;
   padding: 14px 10px;
-  width: 200px;
+  width: 400px;
   outline: none;
   color: white;
   border-radius: 24px;
   transition: 0.25s;
 }
-.login_form input[type ="password"]{
+.register_form input[type ="email"]{
   border: 0;
   background: none;
   display: block;
@@ -42,26 +41,60 @@ body{
   text-align: center;
   border: 2px solid #2980b9;
   padding: 14px 10px;
-  width: 200px;
+  width: 400px;
   outline: none;
   color: white;
   border-radius: 24px;
   transition: 0.25s;
 }
-.login_form h1{
+.register_form input[type ="password"]{
+  border: 0;
+  background: none;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+  border: 2px solid #2980b9;
+  padding: 14px 10px;
+  width: 400px;
+  outline: none;
+  color: white;
+  border-radius: 24px;
+  transition: 0.25s;
+}
+.register_form input[type ="ChoiceField"]{
+  border: 0;
+  background: none;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+  border: 2px solid #2980b9;
+  padding: 14px 10px;
+  width: 400px;
+  outline: none;
+  color: white;
+  border-radius: 24px;
+  transition: 0.25s;
+}
+.register_form h1{
   color: white;
   text-transform: uppercase;
   font-weight: 500;
 }
-.login_form input[type ="password"]:focus{
-  width: 280px;
+.register_form input[type ="password"]:focus{
+  width: 480px;
   border-color: #7f8c8d;
 }
-.login_form input[type ="text"]:focus{
-  width: 280px;
+.register_form input[type ="text"]:focus{
+  width: 480px;
   border-color: #7f8c8d;
 }
-
+.register_form input[type ="email"]:focus{
+  width: 480px;
+  border-color: #7f8c8d;
+}
+.g-recaptcha {
+       display: inline-block;
+   }
 .btn{
   border: 0;
   background: none;

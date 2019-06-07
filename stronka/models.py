@@ -27,8 +27,6 @@ class Team(models.Model):
 
 class Category(models.Model):
     Description = models.CharField(max_length = 255)
-    MinAge = models.IntegerField(null = True)
-    MaxAge = models.IntegerField(null = True)
 
 class Robot(models.Model):
     groups = (
@@ -44,12 +42,6 @@ class Robot(models.Model):
     Passed = models.BooleanField(default = False)
     Group = models.CharField(choices = groups, null = True, max_length = 2)
 
-class Judge(models.Model):
-    Forename = models.CharField(max_length = 50)
-    Surname = models.CharField(max_length = 50)
-    CategoryID = models.ForeignKey(Category,on_delete=models.CASCADE)
-    TelNumber = models.PositiveIntegerField(validators=[MaxValueValidator(999999999)])
-    Email = models.EmailField(max_length=50)
 class Match(models.Model):
     CategoryID = models.ForeignKey(Category,on_delete=models.CASCADE)
     IDRobot1 = models.ForeignKey(Robot,on_delete = models.CASCADE, related_name='robot1')

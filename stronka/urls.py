@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^changePassword/$',views.changePassword, name = 'changePassword'),
     url(r'^matches/$',views.matches, name = 'matches'),
     url(r'^team/$',views.team, name = 'team'),
+    url(r'^export/$',views.export, name = 'export'),
 ]

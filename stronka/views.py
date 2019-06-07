@@ -24,10 +24,13 @@ from django.contrib.auth import (
                                 )
 from django.shortcuts import render_to_response
 import os
-from sendgrid import SendGridAPIClient
+
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 
 def login_view(request):
@@ -57,6 +60,27 @@ def team(request):
 def matches(request):
     matches = Match.objects.all()
     return render(request, 'accounts/matches.html',{'matches':matches})
+
+
+@login_required(login_url='/account/login/')
+def export(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=hello.pdf'
+    p = canvas.Canvas(response)
+    x= 800
+    user = request.user
+    friends = Profile.objects.filter(TeamID = user.profile.TeamID)
+    druzyna = user.profile.TeamID.Name + " w skladzie:"
+
+    p.drawString(50, x, druzyna)
+    x= x-12
+    for friend in friends:
+        p.drawString(50, x, friend.Forename+" "+friend.Surname)
+        x= x-12
+    p.drawString(50, x, "Uczestniczyla w zawodach EastROBO2019")
+    p.showPage()
+    p.save()
+    return response
 
 @login_required(login_url='/account/login/')
 def createMatch(request):

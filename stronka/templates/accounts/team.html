@@ -18,5 +18,9 @@
     {% endif %}
     <br>
   {% endfor %}
+  <h5> Raport </h5>
+  <form method="get" action="/account/export">
+    <button type="submit">Generate</button>
+  </form>
   </div>
 {%endblock%}

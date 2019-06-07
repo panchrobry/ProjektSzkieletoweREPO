@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{%block head%}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/matches_style.css' %}" type = "text/css">
+
+{%endblock%}
+{% block body %}
+
+
+
+<div class="matches">
+
+    {% for match in matches%}
+      <h1>{{match.IDRobot1.CategoryID.Description}}</h1>
+      {{match.IDRobot1.Name}} - {{match.IDRobot2.Name}} = {{match.Result}}<br>
+    {%endfor%}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{%block head%}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/team_style.css' %}" type = "text/css">
+
+{%endblock%}
+
+
+{%block body%}
+
+  <div class = "tresc">
+
+  <h1> Your TeamCode: {{ user.profile.TeamID.TeamCode}}<br> </h1>
+  {% for friend in friends %}
+    {{ friend.Forename}} {{ friend.Surname}}
+    {% if user.profile.id == friend.id %}
+      <= You
+    {% endif %}
+    <br>
+  {% endfor %}
+  </div>
+{%endblock%}

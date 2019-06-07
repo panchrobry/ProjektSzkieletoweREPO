@@ -7,8 +7,9 @@ from django.contrib.auth.views import login,logout
 urlpatterns = [
     url(r'^login/$',views.login_view, name = 'login_view'),
     url(r'^home/$',views.home),
-    path('accounts/', include('django.contrib.auth.urls')),
-    #url(r'^logout/$',logout, {'template_name': 'accounts/logout.html' }),
+    url(r'^robots/$',views.view_robots, name = 'view_robots'),
+    url(r'^fights/$',views.createMatch, name = 'createMatch'),
+    url(r'^logout/$',views.logout_view, name = 'logout'),
     url(r'^register/$',views.register, name = 'register'),
     url(r'^contact/$',views.contact, name = 'contact'),
     url(r'^addrobot/$',views.addRobot, name = 'addRobot'),
@@ -17,4 +18,6 @@ urlpatterns = [
     url(r'^registerOwn/$',views.registerUserOwn, name = 'registerUserOwn'),
     url(r'^change/$',views.change, name = 'change'),
     url(r'^changePassword/$',views.changePassword, name = 'changePassword'),
+    url(r'^matches/$',views.matches, name = 'matches'),
+    url(r'^team/$',views.team, name = 'team'),
 ]

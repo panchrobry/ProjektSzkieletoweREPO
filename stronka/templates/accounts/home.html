@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
+<!DOCTYPE html>
 
-{% block head %}
-    <title>Strona startowa </title>
-{% endblock %}
+
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/home_style.css' %}" type = "text/css">
 
 
 {% block body %}
-  <div class="jumbotron">
-        <h1> Strona startowa </h1>
+<div class="bgimg-1 w3-display-container w3-opacity-min" >
+  <div class="w3-display-middle" style="white-space:nowrap;">
+    <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity">EASTROBO</span><br><br><br>
+  {% if user.is_authenticated %}
+    <form action="/account/change" >
+        <input type = "submit" value="Witaj">
+    </form>
+  {% else %}
+    <form action="/account/registerOwn" >
+        <input type="submit" value="Go to Registration" />
+    </form>
+  {% endif %}
   </div>
+</div>
+<div class="w3-content w3-container w3-padding-64" >
+  <h3 class="w3-center">What is EastROBO?</h3>
+  <p>EastROBO is an international event that is held at Białystok University of Technology. It poses a great time for every enthusiast of robotics and technology. On the spot, you can spectate many different types of robots and autonomous devices including even some fights between them! Also, if you're interested in seeing someone's creativity freed, then it might a place just for you! EastRobo is organised by Mobilne Systemy Inteligentne science club and Student Council. EastRobo is open event, entry for spectators and competitors is free. There'll be a place for kids, where they can start their adventure with LEGO and robotics.</p>
+</div>
 
-  <div class="container">
-      {% if user.is_authenticated %}
-      Witaj {{ user.profile.Forename }}!!<br/>
 
-      {% else %}
-      Witaj nieznajomy!<br/>
-      {% endif %}
-      Tym zajmuje sie <kbd>Hubert</kbd>
-      cos<br/>
-      cos<br/>
-      cos<br/>
-      cos<br/>
-      cos<br/>
-      cos<br/>
-      cos<br/>
-  </div>
-
-{% endblock %}
+{%endblock%}

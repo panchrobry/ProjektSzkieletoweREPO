@@ -1,0 +1,15 @@
+body{
+
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+
+  background: url(tlo.jpg) no-repeat;
+  background-size: cover;
+}
+.tresc{
+  padding: 3%;
+  color: white;
+  text-align: center;
+
+}

@@ -31,10 +31,18 @@ class Category(models.Model):
     MaxAge = models.IntegerField(null = True)
 
 class Robot(models.Model):
+    groups = (
+        ('A','A'),
+        ('B','B'),
+        ('C','C'),
+        ('D','D'),
+
+    )
     Name = models.CharField(max_length = 50)
     TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,null = True)
     CategoryID = models.ForeignKey(Category,on_delete=models.CASCADE)
     Passed = models.BooleanField(default = False)
+    Group = models.CharField(choices = groups, null = True, max_length = 2)
 
 class Judge(models.Model):
     Forename = models.CharField(max_length = 50)
@@ -46,7 +54,6 @@ class Match(models.Model):
     CategoryID = models.ForeignKey(Category,on_delete=models.CASCADE)
     IDRobot1 = models.ForeignKey(Robot,on_delete = models.CASCADE, related_name='robot1')
     IDRobot2 = models.ForeignKey(Robot,on_delete = models.CASCADE, related_name='robot2')
-    IDJudge = models.ForeignKey(Judge,on_delete = models.CASCADE, blank = True, null = True)
     Result = models.CharField(max_length = 50)
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name = 'profile')

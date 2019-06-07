@@ -30,11 +30,17 @@ class ChangeForm(UserChangeForm):
 
     class Meta:
         model = User
+
         fields = (
                 'forename',
                 'surname',
                 'password',
                 )
+class MatchForm(forms.Form):
+    robot1 = forms.ModelChoiceField(queryset = Robot.objects.all(), empty_label='None')
+    robot2 = forms.ModelChoiceField(queryset = Robot.objects.all(), empty_label='None')
+    result = forms.CharField(max_length = 30)
+
 
 class SignUpForm(UserCreationForm):
     #birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')

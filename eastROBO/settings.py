@@ -117,14 +117,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'dodjango69@gmail.com'
+EMAIL_HOST_PASSWORD = 'arturnielipinski'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
+SESSION_COOKIE_AGE = 1800
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/var/www/static/',
 ]
-
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')

@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import Robot,Category,Team
+from .models import Robot,Category,Team, Match, Profile
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .forms import (ContactForm,
                     RobotCreationForm,
@@ -9,7 +10,9 @@ from .forms import (ContactForm,
                     JoinForm,
                     ChangeForm,
                     LoginForm,
+                    MatchForm,
                     )
+from django.contrib.auth import logout
 from django.core.mail import send_mail
 from datetime import datetime
 from django.contrib.auth import (
@@ -19,11 +22,14 @@ from django.contrib.auth import (
                                 update_session_auth_hash,
 
                                 )
+from django.shortcuts import render_to_response
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-# Create your views here.
-kluczyk ='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'
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -31,12 +37,48 @@ def login_view(request):
             user = form.login(request)
             if user:
                 login(request, user)
-
-        return render(request, 'accounts/login.html', {'form': form })      
+                return redirect('/account/home/')
+        return render(request, 'accounts/login.html', {'form': form })
     else:
         form = LoginForm()
         return render(request, 'accounts/login.html', {'form': form })
 
+def view_robots(request):
+    robots = Robot.objects.all()
+    return render(request, 'accounts/robots.html',{'robots':robots})
+
+@login_required(login_url='/account/login/')
+def team(request):
+    user = request.user
+    friends = Profile.objects.all().filter(TeamID = user.profile.TeamID)
+    return render(request, 'accounts/team.html',{'friends':friends})
+
+
+def matches(request):
+    matches = Match.objects.all()
+    return render(request, 'accounts/matches.html',{'matches':matches})
+
+@login_required(login_url='/account/login/')
+def createMatch(request):
+    if request.method == 'POST':
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            robot1 = form.cleaned_data.get('robot1')
+            robot2 = form.cleaned_data.get('robot2')
+            category = robot1.CategoryID
+            judge = User.objects.get(id  = user.id)
+            result = form.cleaned_data.get('result')
+            obj = Match.objects.create(CategoryID = category,
+                                        IDRobot1 = robot1,
+                                        IDRobot2 = robot2,
+                                        Result = result)
+            return redirect('/account/home/')
+    else:
+        form = MatchForm()
+    return render(request, 'accounts/fights.html', {'form': form})
+
+@login_required(login_url='/account/login/')
 def joinTeam(request):
     if request.method == 'POST':
         form = JoinForm(request.POST)
@@ -50,6 +92,8 @@ def joinTeam(request):
         form = JoinForm()
         return render(request, 'accounts/jointeam.html', {'form': form})
 
+
+@login_required(login_url='/account/login/')
 def changePassword(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user,request.POST)
@@ -89,7 +133,7 @@ def home(request):
     return render(request, 'accounts/home.html')
 
 
-
+@login_required(login_url='/account/login/')
 def change(request):
     if request.method == 'POST':
         form = ChangeForm(request.POST, instance = request.user)
@@ -128,6 +172,8 @@ def register(request):
         args = {'form':form}
         return render(request,'accounts/reg_form.html',args)
 
+
+@login_required(login_url='/account/login/')
 def addRobot(request):
     if request.method == 'POST':
         form = RobotCreationForm(request.POST)
@@ -151,6 +197,8 @@ def addRobot(request):
         args = {'form':form}
         return render(request,'accounts/addrobot.html',args)
 
+
+@login_required(login_url='/account/login/')
 def addTeam(request):
     if request.method == 'POST':
         form = addTeamForm(request.POST)
@@ -176,6 +224,12 @@ def addTeam(request):
         args = {'form':form}
         return render(request,'accounts/addteam.html',args)
 
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse("Wylogowano")
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -183,21 +237,8 @@ def contact(request):
             sender_name = form.cleaned_data['name']
             sender_email = form.cleaned_data['email']
             messageForm = form.cleaned_data['message']
-            message = Mail(
-                        from_email=sender_email,
-                        to_emails='karolek9.10@o2.pl',
-                        subject='Sending with Twilio SendGrid is Fun',
-                        html_content='<strong>even with Python</strong>'
-                        )
-            try:
-                sg = SendGridAPIClient(kluczyk)
-                response = sg.send(message)
-                print(response.status_code)
-                print(response.body)
-                print(response.headers)
-                #   return HttpResponse('POSZLO')
-            except Exception as e:
-                print(e)
+
+            send_mail('test',messageForm,sender_email,['karolek9.10@o2.pl',])
     else:
         form = ContactForm()
     return render(request,'accounts/contact.html', {'form':form})

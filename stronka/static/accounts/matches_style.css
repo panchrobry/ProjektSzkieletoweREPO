@@ -1,0 +1,21 @@
+body{
+
+  margin: 0;
+  color: white;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #2d3436;
+  background-size: cover;
+}
+.matches{
+  padding: 3%;
+  color: white;
+  left: 50%
+  transform: translate(-50%,-50%);
+  text-align: center;
+}
+
+
+.btn:hover{
+  background-color: #2980b9;
+}

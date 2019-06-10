@@ -261,8 +261,9 @@ def contact(request):
             sender_name = form.cleaned_data['name']
             sender_email = form.cleaned_data['email']
             messageForm = form.cleaned_data['message']
-
-            send_mail('test',messageForm,sender_email,['karolek9.10@o2.pl',])
+            message = sender_name +" " + sender_email+ " wyslal wiadomosc: " + messageForm
+            send_mail('test',message,sender_email,['karolek9.10@o2.pl',])
+            return HttpResponse("Wiadomosc wyslana")
     else:
         form = ContactForm()
     return render(request,'accounts/contact.html', {'form':form})

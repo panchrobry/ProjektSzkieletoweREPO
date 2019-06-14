@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stronka',
     'django_countries',
+    'django_filters',
+    'smart_selects',
 ]
 
 MIDDLEWARE = [

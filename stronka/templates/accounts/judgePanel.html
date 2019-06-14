@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{%block head%}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/judgePanel_style.css' %}" type = "text/css">
+
+{%endblock%}
+
+
+{% block body %}
+<div class="Panel">
+      <h1>Judge Panel </h1>
+
+  <div class="form">
+  <form action="/account/addraceLegoLF" >
+      <input type="submit" value="Dodaj wyścig LegoLF" />
+  </form>
+  <form action="/account/addraceLegoLF" >
+      <input type="submit" value="Dodaj wyścig LF" />
+  </form>
+  <form action="/account/createMatchLegoSumo" >
+      <input type="submit" value="Dodaj walke Lego Sumo" />
+  </form>
+  <form action="/account/createMatchMiniSumo" >
+      <input type="submit" value="Dodaj walkę Mini Sumo" />
+  </form>
+  <form action="/account/createMatchSumo" >
+      <input type="submit" value="Dodaj walkę Sumo" />
+  </form>
+  <form action="/account/groupAuto" >
+      <input type="submit" value="Grupy automatyczne" />
+  </form>
+  <form action="/account/groupManual" >
+      <input type="submit" value="Popraw grupy" />
+  </form>
+  <form action="/account/robots" >
+      <input type="submit" value="Wyswietl roboty" />
+  </form>
+</div>
+</div>
+
+{% endblock %}

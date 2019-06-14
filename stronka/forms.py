@@ -2,8 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django_countries.fields import CountryField
-from .models import Robot,Category
+from .models import Robot,Category,Race
 from django.contrib.auth import authenticate
+from django.db.models import Q
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=255, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
@@ -36,10 +37,45 @@ class ChangeForm(UserChangeForm):
                 'surname',
                 'password',
                 )
-class MatchForm(forms.Form):
-    robot1 = forms.ModelChoiceField(queryset = Robot.objects.all(), empty_label='None')
-    robot2 = forms.ModelChoiceField(queryset = Robot.objects.all(), empty_label='None')
+class MatchFormLegoSumo(forms.Form):
+    robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 2)), empty_label='None')
+    robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 2)), empty_label='None')
     result = forms.CharField(max_length = 30)
+    def clean(self):
+        robot1 = self.cleaned_data['robot1']
+        robot2 = self.cleaned_data['robot2']
+        if robot1.CategoryID != robot2.CategoryID:
+            raise forms.ValidationError("Nie ta sama kategoria")
+        if robot1== robot2:
+            raise forms.ValidationError("Nie moga byc te same roboty")
+class MatchFormSumo(forms.Form):
+    robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 3)), empty_label='None')
+    robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 3)), empty_label='None')
+    result = forms.CharField(max_length = 30)
+    def clean(self):
+        robot1 = self.cleaned_data['robot1']
+        robot2 = self.cleaned_data['robot2']
+        if robot1.CategoryID != robot2.CategoryID:
+            raise forms.ValidationError("Nie ta sama kategoria")
+        if robot1== robot2:
+            raise forms.ValidationError("Nie moga byc te same roboty")
+class MatchFormMiniSumo(forms.Form):
+    robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 4)), empty_label='None')
+    robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 4)), empty_label='None')
+    result = forms.CharField(max_length = 30)
+    def clean(self):
+        robot1 = self.cleaned_data['robot1']
+        robot2 = self.cleaned_data['robot2']
+        if robot1.CategoryID != robot2.CategoryID:
+            raise forms.ValidationError("Nie ta sama kategoria")
+        if robot1== robot2:
+            raise forms.ValidationError("Nie moga byc te same roboty")
+class RaceFormLF(forms.Form):
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 6)), empty_label='None')
+    result = forms.FloatField(min_value = 0 )
+class RaceFormLegoLF(forms.Form):
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 5)), empty_label='None')
+    result = forms.FloatField(min_value = 0 )
 
 
 class SignUpForm(UserCreationForm):
@@ -123,3 +159,15 @@ class addTeamForm(forms.Form):
     city = forms.CharField(max_length = 100)
     company = forms.CharField(max_length = 100)
     country = CountryField(blank_label='(Select Country)',multiple=True,default = 'Poland').formfield()
+class GroupAuto(forms.Form):
+    category = forms.ModelChoiceField(queryset = Category.objects.all())
+class ManualGroupForm(forms.Form):
+    groups = (
+                ('A','A'),
+                ('B','B'),
+                ('C','C'),
+                ('D','D'),
+
+            )
+    robot = forms.ModelChoiceField(queryset = Robot.objects.all())
+    group = forms.ChoiceField(choices = groups)

@@ -1,17 +1,9 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import Robot,Category,Team, Match, Profile
+from .models import *
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .forms import (ContactForm,
-                    RobotCreationForm,
-                    addTeamForm,
-                    SignUpForm,
-                    JoinForm,
-                    ChangeForm,
-                    LoginForm,
-                    MatchForm,
-                    )
+from .forms import *
 from django.contrib.auth import logout
 from django.core.mail import send_mail
 from datetime import datetime
@@ -24,14 +16,14 @@ from django.contrib.auth import (
                                 )
 from django.shortcuts import render_to_response
 import os
-
+from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
-
+from .filters import *
 
 def login_view(request):
     if request.method == 'POST':
@@ -48,7 +40,9 @@ def login_view(request):
 
 def view_robots(request):
     robots = Robot.objects.all()
-    return render(request, 'accounts/robots.html',{'robots':robots})
+
+    robFilter = RobotsFilter(request.GET,queryset = robots)
+    return render(request, 'accounts/robots.html',{'filter':robFilter})
 
 @login_required(login_url='/account/login/')
 def team(request):
@@ -59,7 +53,14 @@ def team(request):
 
 def matches(request):
     matches = Match.objects.all()
-    return render(request, 'accounts/matches.html',{'matches':matches})
+    filterMatches = MatchesFilter(request.GET, queryset = matches)
+    return render(request, 'accounts/matches.html',{'filter':filterMatches})
+
+def races(request):
+    races = Race.objects.all().order_by('Result')
+    filterRaces = RacesFilter(request.GET, queryset = races)
+    return render(request, 'accounts/races.html',{'filter':filterRaces})
+
 
 
 @login_required(login_url='/account/login/')
@@ -83,24 +84,112 @@ def export(request):
     return response
 
 @login_required(login_url='/account/login/')
-def createMatch(request):
+def createMatchLegoSumo(request):
     if request.method == 'POST':
-        form = MatchForm(request.POST)
+        form = MatchFormLegoSumo(request.POST)
         if form.is_valid():
-            user = request.user
             robot1 = form.cleaned_data.get('robot1')
             robot2 = form.cleaned_data.get('robot2')
             category = robot1.CategoryID
-            judge = User.objects.get(id  = user.id)
+            group = robot1.Group
             result = form.cleaned_data.get('result')
             obj = Match.objects.create(CategoryID = category,
                                         IDRobot1 = robot1,
                                         IDRobot2 = robot2,
-                                        Result = result)
-            return redirect('/account/home/')
+                                        Result = result,
+                                        Group = group,
+                                        )
+            return render(request, 'accounts/createMatchLegoSumo.html', {'form': form})
     else:
-        form = MatchForm()
-    return render(request, 'accounts/fights.html', {'form': form})
+        messages.error(request,"error")
+        form = MatchFormLegoSumo()
+    return render(request, 'accounts/createMatchLegoSumo.html', {'form': form})
+
+@login_required(login_url='/account/login/')
+def createMatchSumo(request):
+    if request.method == 'POST':
+        form = MatchFormSumo(request.POST)
+        if form.is_valid():
+            robot1 = form.cleaned_data.get('robot1')
+            robot2 = form.cleaned_data.get('robot2')
+            category = robot1.CategoryID
+            group = robot1.Group
+            result = form.cleaned_data.get('result')
+            obj = Match.objects.create(CategoryID = category,
+                                        IDRobot1 = robot1,
+                                        IDRobot2 = robot2,
+                                        Result = result,
+                                        Group = group,
+                                        )
+            return render(request, 'accounts/createMatchSumo.html', {'form': form})
+    else:
+        messages.error(request,"error")
+        form = MatchFormSumo()
+    return render(request, 'accounts/createMatchSumo.html', {'form': form})
+
+@login_required(login_url='/account/login/')
+def createMatchMiniSumo(request):
+    if request.method == 'POST':
+        form = MatchFormMiniSumo(request.POST)
+        if form.is_valid():
+            robot1 = form.cleaned_data.get('robot1')
+            robot2 = form.cleaned_data.get('robot2')
+            category = robot1.CategoryID
+            group = robot1.Group
+            result = form.cleaned_data.get('result')
+            obj = Match.objects.create(CategoryID = category,
+                                        IDRobot1 = robot1,
+                                        IDRobot2 = robot2,
+                                        Result = result,
+                                        Group = group,
+                                        )
+            return render(request, 'accounts/createMatchMiniSumo.html', {'form': form})
+    else:
+        messages.error(request,"error")
+        form = MatchFormMiniSumo()
+    return render(request, 'accounts/createMatchMiniSumo.html', {'form': form})
+
+@login_required(login_url='/account/login/')
+def createRaceLF(request):
+    if request.method == 'POST':
+        form = RaceFormLF(request.POST)
+        if form.is_valid():
+            robot = form.cleaned_data.get('robot')
+            category = robot.CategoryID
+            result = form.cleaned_data.get('result')
+            obj = Race.objects.create(CategoryID = category,
+                                        IDRobot = robot,
+                                        Result = result)
+            return render(request, 'accounts/addraceLF.html', {'form': form})
+    else:
+
+        messages.error(request,"error")
+        form = RaceFormLF()
+    return render(request, 'accounts/addraceLF.html', {'form': form})
+
+@login_required(login_url='/account/login/')
+def createRaceLegoLF(request):
+    if request.method == 'POST':
+        form = RaceFormLegoLF(request.POST)
+        if form.is_valid():
+            robot = form.cleaned_data.get('robot')
+            category = robot.CategoryID
+            result = form.cleaned_data.get('result')
+            obj = Race.objects.create(CategoryID = category,
+                                        IDRobot = robot,
+                                        Result = result)
+            return render(request, 'accounts/addraceLegoLF.html', {'form': form})
+    else:
+
+        messages.error(request,"error")
+        form = RaceFormLegoLF()
+    return render(request, 'accounts/addraceLegoLF.html', {'form': form})
+
+
+@login_required(login_url='/account/login/')
+def judgePanel(request):
+    return render(request, 'accounts/judgePanel.html')
+
 
 @login_required(login_url='/account/login/')
 def joinTeam(request):
@@ -132,7 +221,7 @@ def changePassword(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'accounts/changePassword.html',{'form': form})
 
-
+@login_required(login_url='/account/login/')
 def registerUserOwn(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -211,6 +300,7 @@ def addRobot(request):
                 category = None
 
             robot = Robot.objects.create(
+                Type = category.Type,
                 Name = name,
                 CategoryID = category,
                 TeamID = user.profile.TeamID
@@ -262,8 +352,52 @@ def contact(request):
             sender_email = form.cleaned_data['email']
             messageForm = form.cleaned_data['message']
             message = sender_name +" " + sender_email+ " wyslal wiadomosc: " + messageForm
-            send_mail('test',message,sender_email,['karolek9.10@o2.pl',])
+            send_mail('test',message,sender_email,['ka rolek9.10@o2.pl',])
             return HttpResponse("Wiadomosc wyslana")
     else:
         form = ContactForm()
     return render(request,'accounts/contact.html', {'form':form})
+def AutoGroup(request):
+    if request.method == 'POST':
+        form = GroupAuto(request.POST)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            count = 0
+            for robot in Robot.objects.filter(CategoryID=category):
+                if count < 4:
+                    robot.Group = 'A'
+                    robot.save()
+                if count < 8 and count >= 4:
+                    robot.Group = 'B'
+                    robot.save()
+                if count < 12 and count >= 8:
+                    robot.Group = 'C'
+                    robot.save()
+                if count >= 12:
+                    robot.Group = 'D'
+                    robot.save()
+                count= count +1
+
+            return redirect('/account/home/')
+    else:
+        form = GroupAuto()
+        args = {'form':form}
+        return render(request,'accounts/groupAuto.html',args)
+
+    return render(request, 'accounts/groupAuto.html',{'form':form})
+def ManualGroup(request):
+    if request.method == 'POST':
+        form = ManualGroupForm(request.POST)
+        if form.is_valid():
+            robot = form.cleaned_data['robot']
+            group = form.cleaned_data['group']
+            robot.Group = group
+            robot.save()
+
+            return redirect('/account/home/')
+    else:
+        form = ManualGroupForm()
+        args = {'form':form}
+        return render(request,'accounts/manualGroup.html',args)
+
+    return render(request, 'accounts/manualGroup.html',{'form':form})

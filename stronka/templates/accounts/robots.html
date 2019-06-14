@@ -7,9 +7,14 @@
 </div>
 
 <div class="container">
-  {% for rob in robots %}
-    {{ rob.Name }}<br>
-  {% endfor %}
+  <form method="get">
+      {{ filter.form.as_p }}
+      <button type="submit">Search</button>
+    </form>
+    <ul>
+    {% for rob in filter.qs %}
+      {{ rob }} {{ rob.CategoryID }} {{rob.TeamID}}<br>
+    {% endfor %}
 </div>
 
 {% endblock %}

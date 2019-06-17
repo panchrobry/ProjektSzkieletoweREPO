@@ -4,8 +4,9 @@ services:
   web:
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    container_name: eastROBO_service
+    container_name: eastrobo1_service
     volumes:
-      - .:/eastROBO_service
+      - .:/eastrobo1_service
     ports:
       - "8000:8000"
+      

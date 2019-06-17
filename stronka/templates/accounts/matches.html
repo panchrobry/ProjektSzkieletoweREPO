@@ -10,18 +10,20 @@
 
 
 <div class="matches">
+  <h1> MATCHES </h1>
     <form method="get">
       {{ filter.form.as_p }}
       <button type="submit">Search</button>
     </form>
     <ul>
-      <table border="1" algin = "right">
+      <br><br>
+      <table border="2" algin = "center">
         <tr>
-          <td>TEAM</td>	<td>ROBOT</td><td>TEAM</td>	<td>ROBOT</td> <td>RESULT </td>
+          <td>TEAM</td>	<td>ROBOT</td><td>GROUP</td><td>TEAM</td>	<td>ROBOT</td><td>GROUP</td> <td>RESULT </td>
         </tr>
     {% for match in filter.qs%}
       <tr>
-        <td>{{match.IDRobot1.TeamID}}</td><td>{{match.IDRobot1}}</td>	<td>{{match.IDRobot2.TeamID}}</td><td>{{match.IDRobot2}}</td> <td>{{match.Result}} </td>
+        <td>{{match.IDRobot1.TeamID}}</td><td>{{match.IDRobot1}}</td>	<td>{{match.IDRobot1.Group}}</td><td>{{match.IDRobot2.TeamID}}</td><td>{{match.IDRobot2}}</td> <td>{{match.IDRobot2.Group}}</td><td>{{match.Result}} </td>
       </tr>
     {%endfor%}
 

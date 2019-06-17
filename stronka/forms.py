@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django_countries.fields import CountryField
-from .models import Robot,Category,Race
+from .models import *
 from django.contrib.auth import authenticate
 from django.db.models import Q
 class LoginForm(forms.Form):
@@ -24,6 +24,12 @@ class LoginForm(forms.Form):
         return user
 class JoinForm(forms.Form):
     teamID = forms.CharField(max_length = 8)
+    result = Team.objects.filter(TeamCode = teamID).count()
+    def clean(self):
+        teamIDtemp = self.cleaned_data['teamID']
+        teams = Team.objects.filter(TeamCode = teamIDtemp).count()
+        if teams==0:
+            raise forms.ValidationError("Taka drużyna nie istnieje")
 
 class ChangeForm(UserChangeForm):
     forename = forms.CharField(max_length = 100,required = False)
@@ -37,10 +43,16 @@ class ChangeForm(UserChangeForm):
                 'surname',
                 'password',
                 )
+results = (
+            ('Wygrał Robot1','Wygrał Robot1'),
+            ('Remis','Remis'),
+            ('Wygrał Robot2','Wygrał Robot2'),
+
+        )
 class MatchFormLegoSumo(forms.Form):
     robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 2)), empty_label='None')
     robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 2)), empty_label='None')
-    result = forms.CharField(max_length = 30)
+    result = forms.ChoiceField(choices = results)
     def clean(self):
         robot1 = self.cleaned_data['robot1']
         robot2 = self.cleaned_data['robot2']
@@ -48,10 +60,11 @@ class MatchFormLegoSumo(forms.Form):
             raise forms.ValidationError("Nie ta sama kategoria")
         if robot1== robot2:
             raise forms.ValidationError("Nie moga byc te same roboty")
+
 class MatchFormSumo(forms.Form):
     robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 3)), empty_label='None')
     robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 3)), empty_label='None')
-    result = forms.CharField(max_length = 30)
+    result = forms.ChoiceField(choices = results)
     def clean(self):
         robot1 = self.cleaned_data['robot1']
         robot2 = self.cleaned_data['robot2']
@@ -62,7 +75,7 @@ class MatchFormSumo(forms.Form):
 class MatchFormMiniSumo(forms.Form):
     robot1 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 4)), empty_label='None')
     robot2 = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 4)), empty_label='None')
-    result = forms.CharField(max_length = 30)
+    result = forms.ChoiceField(choices = results)
     def clean(self):
         robot1 = self.cleaned_data['robot1']
         robot2 = self.cleaned_data['robot2']
@@ -71,10 +84,10 @@ class MatchFormMiniSumo(forms.Form):
         if robot1== robot2:
             raise forms.ValidationError("Nie moga byc te same roboty")
 class RaceFormLF(forms.Form):
-    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 6)), empty_label='None')
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 5)), empty_label='None')
     result = forms.FloatField(min_value = 0 )
 class RaceFormLegoLF(forms.Form):
-    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 5)), empty_label='None')
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(Q(CategoryID = 6)), empty_label='None')
     result = forms.FloatField(min_value = 0 )
 
 
@@ -161,7 +174,7 @@ class addTeamForm(forms.Form):
     country = CountryField(blank_label='(Select Country)',multiple=True,default = 'Poland').formfield()
 class GroupAuto(forms.Form):
     category = forms.ModelChoiceField(queryset = Category.objects.all())
-class ManualGroupForm(forms.Form):
+class ManualGroupFormLS(forms.Form):
     groups = (
                 ('A','A'),
                 ('B','B'),
@@ -169,5 +182,25 @@ class ManualGroupForm(forms.Form):
                 ('D','D'),
 
             )
-    robot = forms.ModelChoiceField(queryset = Robot.objects.all())
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(CategoryID = 2))
+    group = forms.ChoiceField(choices = groups)
+class ManualGroupFormMS(forms.Form):
+    groups = (
+                ('A','A'),
+                ('B','B'),
+                ('C','C'),
+                ('D','D'),
+
+            )
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(CategoryID = 4))
+    group = forms.ChoiceField(choices = groups)
+class ManualGroupFormS(forms.Form):
+    groups = (
+                ('A','A'),
+                ('B','B'),
+                ('C','C'),
+                ('D','D'),
+
+            )
+    robot = forms.ModelChoiceField(queryset = Robot.objects.filter(CategoryID = 3))
     group = forms.ChoiceField(choices = groups)

@@ -5,7 +5,7 @@ import django_filters
 class RobotsFilter(django_filters.FilterSet):
     class Meta:
         model = Robot
-        fields = ['Name','CategoryID','Group']
+        fields = ['Name','CategoryID','Group','TeamID']
 class MatchesFilter(django_filters.FilterSet):
 
     class Meta:

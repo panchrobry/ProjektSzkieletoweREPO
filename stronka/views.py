@@ -25,6 +25,8 @@ from django.http import FileResponse
 from reportlab.pdfgen import canvas
 from .filters import *
 
+
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -39,7 +41,7 @@ def login_view(request):
         return render(request, 'accounts/login.html', {'form': form })
 
 def view_robots(request):
-    robots = Robot.objects.all()
+    robots = Robot.objects.all().order_by('-Points')
 
     robFilter = RobotsFilter(request.GET,queryset = robots)
     return render(request, 'accounts/robots.html',{'filter':robFilter})
@@ -50,7 +52,9 @@ def team(request):
     friends = Profile.objects.all().filter(TeamID = user.profile.TeamID)
     return render(request, 'accounts/team.html',{'friends':friends})
 
+def successPage(request):
 
+    return render(request,'accounts/successPage.html')
 def matches(request):
     matches = Match.objects.all()
     filterMatches = MatchesFilter(request.GET, queryset = matches)
@@ -93,6 +97,25 @@ def createMatchLegoSumo(request):
             category = robot1.CategoryID
             group = robot1.Group
             result = form.cleaned_data.get('result')
+    if request.method == 'POST':
+        form = MatchFormSumo(request.POST)
+        if form.is_valid():
+            robot1 = form.cleaned_data.get('robot1')
+            robot2 = form.cleaned_data.get('robot2')
+            category = robot1.CategoryID
+            group = robot1.Group
+            result = form.cleaned_data.get('result')
+            if result == "Wygrał Robot1":
+                robot1.Points = robot1.Points+3
+                robot1.save()
+            if result == "Wygrał Robot2":
+                robot2.Points = robot2.Points+3
+                robot2.save()
+            if result == "Remis":
+                robot1.Points = robot1.Points+1
+                robot2.Points = robot2.Points+1
+                robot1.save()
+                robot2.save()
             obj = Match.objects.create(CategoryID = category,
                                         IDRobot1 = robot1,
                                         IDRobot2 = robot2,
@@ -105,6 +128,8 @@ def createMatchLegoSumo(request):
         form = MatchFormLegoSumo()
     return render(request, 'accounts/createMatchLegoSumo.html', {'form': form})
 
+
+
 @login_required(login_url='/account/login/')
 def createMatchSumo(request):
     if request.method == 'POST':
@@ -115,6 +140,17 @@ def createMatchSumo(request):
             category = robot1.CategoryID
             group = robot1.Group
             result = form.cleaned_data.get('result')
+            if result == "Wygrał Robot1":
+                robot1.Points = robot1.Points+3
+                robot1.save()
+            if result == "Wygrał Robot2":
+                robot2.Points = robot2.Points+3
+                robot2.save()
+            if result == "Remis":
+                robot1.Points = robot1.Points+1
+                robot2.Points = robot2.Points+1
+                robot1.save()
+                robot2.save()
             obj = Match.objects.create(CategoryID = category,
                                         IDRobot1 = robot1,
                                         IDRobot2 = robot2,
@@ -137,6 +173,25 @@ def createMatchMiniSumo(request):
             category = robot1.CategoryID
             group = robot1.Group
             result = form.cleaned_data.get('result')
+    if request.method == 'POST':
+        form = MatchFormSumo(request.POST)
+        if form.is_valid():
+            robot1 = form.cleaned_data.get('robot1')
+            robot2 = form.cleaned_data.get('robot2')
+            category = robot1.CategoryID
+            group = robot1.Group
+            result = form.cleaned_data.get('result')
+            if result == "Wygrał Robot1":
+                robot1.Points = robot1.Points+3
+                robot1.save()
+            if result == "Wygrał Robot2":
+                robot2.Points = robot2.Points+3
+                robot2.save()
+            if result == "Remis":
+                robot1.Points = robot1.Points+1
+                robot2.Points = robot2.Points+1
+                robot1.save()
+                robot2.save()
             obj = Match.objects.create(CategoryID = category,
                                         IDRobot1 = robot1,
                                         IDRobot2 = robot2,
@@ -203,7 +258,7 @@ def joinTeam(request):
 
     else:
         form = JoinForm()
-        return render(request, 'accounts/jointeam.html', {'form': form})
+    return render(request, 'accounts/jointeam.html', {'form': form})
 
 
 @login_required(login_url='/account/login/')
@@ -221,7 +276,7 @@ def changePassword(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'accounts/changePassword.html',{'form': form})
 
-@login_required(login_url='/account/login/')
+
 def registerUserOwn(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -342,7 +397,7 @@ def addTeam(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponse("Wylogowano")
+    return render(request,'accounts/logout.html')
 
 def contact(request):
     if request.method == 'POST':
@@ -352,8 +407,8 @@ def contact(request):
             sender_email = form.cleaned_data['email']
             messageForm = form.cleaned_data['message']
             message = sender_name +" " + sender_email+ " wyslal wiadomosc: " + messageForm
-            send_mail('test',message,sender_email,['ka rolek9.10@o2.pl',])
-            return HttpResponse("Wiadomosc wyslana")
+            send_mail('test',message,sender_email,['karolek9.10@o2.pl',])
+            return redirect('/account/successPage')
     else:
         form = ContactForm()
     return render(request,'accounts/contact.html', {'form':form})
@@ -385,9 +440,9 @@ def AutoGroup(request):
         return render(request,'accounts/groupAuto.html',args)
 
     return render(request, 'accounts/groupAuto.html',{'form':form})
-def ManualGroup(request):
+def ManualGroupLegoSumo(request):
     if request.method == 'POST':
-        form = ManualGroupForm(request.POST)
+        form = ManualGroupFormLS(request.POST)
         if form.is_valid():
             robot = form.cleaned_data['robot']
             group = form.cleaned_data['group']
@@ -396,8 +451,40 @@ def ManualGroup(request):
 
             return redirect('/account/home/')
     else:
-        form = ManualGroupForm()
+        form = ManualGroupFormLS()
         args = {'form':form}
-        return render(request,'accounts/manualGroup.html',args)
+        return render(request,'accounts/manualGroupLegoSumo.html',args)
 
-    return render(request, 'accounts/manualGroup.html',{'form':form})
+    return render(request, 'accounts/manualGroupLegoSumo.html',{'form':form})
+def ManualGroupMiniSumo(request):
+    if request.method == 'POST':
+        form = ManualGroupFormMS(request.POST)
+        if form.is_valid():
+            robot = form.cleaned_data['robot']
+            group = form.cleaned_data['group']
+            robot.Group = group
+            robot.save()
+
+            return redirect('/account/home/')
+    else:
+        form = ManualGroupFormMS()
+        args = {'form':form}
+        return render(request,'accounts/manualGroupMiniSumo.html',args)
+
+    return render(request, 'accounts/manualGroupMiniSumo.html',{'form':form})
+def ManualGroupSumo(request):
+    if request.method == 'POST':
+        form = ManualGroupFormS(request.POST)
+        if form.is_valid():
+            robot = form.cleaned_data['robot']
+            group = form.cleaned_data['group']
+            robot.Group = group
+            robot.save()
+
+            return redirect('/account/home/')
+    else:
+        form = ManualGroupFormS()
+        args = {'form':form}
+        return render(request,'accounts/manualGroupSumo.html',args)
+
+    return render(request, 'accounts/manualGroupSumo.html',{'form':form})

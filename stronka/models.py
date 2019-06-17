@@ -49,15 +49,13 @@ class Robot(models.Model):
 
     Name = models.CharField(max_length = 50)
     TeamID = models.ForeignKey(Team,on_delete=models.CASCADE,null = True)
-    CategoryID = ChainedForeignKey(
+    CategoryID = models.ForeignKey(
                                         Category,
                                         on_delete=models.CASCADE,
-                                        chained_field = "Name",
-                                        show_all = False,
-                                        auto_choose = True,
+                    
                                         )
     Passed = models.BooleanField(default = False)
-    Group = models.CharField(  max_length = 2,blank = False,null = True)
+    Group = models.CharField( choices = groups, max_length = 2,blank = False,null = True)
     Points = models.IntegerField(default = 0    )
     def __str__(self):
         return self.Name

@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
+{%block head%}
+
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/robots_style.css' %}" type = "text/css">
+{%endblock%}
 
 
 {% block body %}
-<div class="jumbotron">
+<div class="robots">
+<br><br>
       <h1> Robots </h1>
-</div>
-
-<div class="container">
   <form method="get">
       {{ filter.form.as_p }}
       <button type="submit">Search</button>
     </form>
     <ul>
-    {% for rob in filter.qs %}
-      {{ rob }} {{ rob.CategoryID }} {{rob.TeamID}}<br>
-    {% endfor %}
+      <table border="2" algin = "right">
+        <tr>
+          <td>ROBOT</td>	<td>CATEGORY</td> <td>TEAM </td><td>POINTS</td><br>
+        </tr>
+        {% for rob in filter.qs %}
+        <tr>
+          <td>{{ rob }}</td> <td>{{ rob.CategoryID }}</td><td> {{rob.TeamID}}</td><td> {{rob.Points}}</td>
+        </tr>
+        {% endfor %}
+        </table>
 </div>
 
 {% endblock %}

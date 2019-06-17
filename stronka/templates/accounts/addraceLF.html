@@ -1,17 +1,38 @@
 {% extends 'base.html' %}
-
-
+{% block head %}
+{% load static %}
+<link rel="stylesheet"  href="{% static 'accounts/add_robot.css' %}" type = "text/css">
+{% endblock %}
 {% block body %}
-<div class="jumbotron">
-      <h1> Add Race </h1>
-</div>
+<div class="addForm">
+      <h1> Create Race LF </h1>
 
-<div class="container">
+
+
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+      <p>
+        <div class="form">
+        {{ field.label_tag }}<br>
+        {{ field }}
+        </div>
+
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+
+      </p>
+    {% endfor %}
+    {% if form.non_field_errors %}
+    <ul class='form-errors'>
+        {% for error in form.non_field_errors %}
+          <small style="color: red">{{ error }}</small>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="submit" name="submit">
-    Save
+    Add
     </button>
 
 </form>

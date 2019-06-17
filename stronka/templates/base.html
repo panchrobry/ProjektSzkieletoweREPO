@@ -18,6 +18,7 @@
     </a>
     <a href="/account/home" class="w3-bar-item w3-button">EASTROBO</a>
     <a href="/account/contact" class="w3-bar-item w3-button w3-hide-small">CONTACT</a>
+    <a href="/account/robots" class="w3-bar-item w3-button w3-hide-small"> ROBOTS</a>
     <a href="/account/matches" class="w3-bar-item w3-button w3-hide-small"> MATCHES</a>
     <a href="/account/races" class="w3-bar-item w3-button w3-hide-small"> RACES</a>
     {% if user.is_authenticated %}
@@ -29,7 +30,7 @@
           <a href="{% url 'addTeam' %}" class="w3-bar-item w3-button w3-hide-small"> CREATE TEAM</a>
           <a href="{% url 'joinTeam' %}" class="w3-bar-item w3-button w3-hide-small"> JOIN TEAM</a>
           {% else %}
-        
+
           <a href="{% url 'judgePanel' %}" class="w3-bar-item w3-button w3-hide-small"> JUDGE PANEL</a>
           {% endif %}
         {% else %}

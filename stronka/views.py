@@ -98,7 +98,7 @@ def createMatchLegoSumo(request):
             group = robot1.Group
             result = form.cleaned_data.get('result')
     if request.method == 'POST':
-        form = MatchFormSumo(request.POST)
+        form = MatchFormLegoSumo(request.POST)
         if form.is_valid():
             robot1 = form.cleaned_data.get('robot1')
             robot2 = form.cleaned_data.get('robot2')
@@ -174,7 +174,7 @@ def createMatchMiniSumo(request):
             group = robot1.Group
             result = form.cleaned_data.get('result')
     if request.method == 'POST':
-        form = MatchFormSumo(request.POST)
+        form = MatchFormMiniSumo(request.POST)
         if form.is_valid():
             robot1 = form.cleaned_data.get('robot1')
             robot2 = form.cleaned_data.get('robot2')
@@ -321,6 +321,7 @@ def change(request):
             return redirect('/account/home/')
     else:
         form = ChangeForm()
+        
         args = {'form':form}
         return render(request,'accounts/change.html',args)
 

@@ -173,7 +173,7 @@ class addTeamForm(forms.Form):
     company = forms.CharField(max_length = 100)
     country = CountryField(blank_label='(Select Country)',multiple=True,default = 'Poland').formfield()
 class GroupAuto(forms.Form):
-    category = forms.ModelChoiceField(queryset = Category.objects.all())
+    category = forms.ModelChoiceField(queryset = Category.objects.filter(Type = 1))
 class ManualGroupFormLS(forms.Form):
     groups = (
                 ('A','A'),

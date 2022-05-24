@@ -10,6 +10,6 @@ djangorestframework==3.9.4
 djangorestframework-filters==0.11.1
 numpy==1.16.4
 reportlab==3.5.23
-tensorflow==1.13.1
+tensorflow==2.6.4
 tensorflow-estimator==1.13.0
 xhtml2pdf==0.2.3
